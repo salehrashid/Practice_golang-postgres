@@ -17,7 +17,9 @@ func main() {
 	}
 	defer db.Close()
 
-	deleteData(db)
+	if err := deleteData(db); err != nil {
+		panic(err)
+	}
 }
 
 func deleteData(db *sql.DB) error {

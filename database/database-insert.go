@@ -17,14 +17,20 @@ func main() {
 	}
 	defer db.Close()
 
-	sqlStatement := `
-INSERT INTO users (name, email)
-VALUES ($1, $2)
-RETURNING id`
+	if err := insertData(db); err != nil {
+		panic(err)
+	}
+}
+
+func insertData(db *sql.DB) error {
+	sqlStatement := `INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id`
 	id := 0
-	err = db.QueryRow(sqlStatement, "saleh", "a@a.com").Scan(&id)
+	err := db.QueryRow(sqlStatement, "saleh", "a@a.com").Scan(&id)
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println("New record ID is:", id)
+
+	return nil
 }

@@ -24,6 +24,12 @@ func main() {
 	}
 	defer db.Close()
 
+	if err := selectData(db); err != nil {
+		panic(err)
+	}
+}
+
+func selectData(db *sql.DB) error {
 	//execute query
 	rows, err := db.Query("SELECT name, email FROM users")
 	if err != nil {
@@ -43,4 +49,6 @@ func main() {
 	if err := rows.Err(); err != nil {
 		panic(err)
 	}
+
+	return nil
 }
