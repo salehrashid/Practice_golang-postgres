@@ -16,37 +16,11 @@ type Cars struct {
 }
 
 func main() {
+	httpHandler()
 	dbInsertRecords()
-	fmt.Println("server nya lagi jalan nih bang http://localhost:8080/")
-
-	//digunakan untuk routing aplikasi web.
-	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		root := path.Join("gorm/template", "root.html")
-		tmpl, err := template.ParseFiles(root)
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		if err := tmpl.Execute(writer, tmpl); err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-		}
-	})
-
-	http.HandleFunc("/index", index)
-
-	/**
-	digunakan untuk menghidupkan server sekaligus menjalankan aplikasi
-	menggunakan server tersebut. Di Go, 1 web aplikasi adalah 1 buah
-	server berbeda.
-	*/
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		panic("error lah bang")
-	}
 }
 
-func index(writer http.ResponseWriter, response *http.Request) {
+func index(writer http.ResponseWriter, _ *http.Request) {
 	dsn := "host=localhost user=postgres password=root dbname=car port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
@@ -62,6 +36,36 @@ func index(writer http.ResponseWriter, response *http.Request) {
 
 	if err := tmplRender.Execute(writer, cars); err != nil {
 		http.Error(writer, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func httpHandler() {
+	fmt.Println("server nya lagi jalan nih bang, http://localhost:8080")
+
+	//digunakan untuk routing aplikasi web.
+	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
+		root := path.Join("gorm/template", "root.html")
+		tmpl, err := template.ParseFiles(root)
+		if err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err := tmpl.Execute(writer, tmpl); err != nil {
+			http.Error(writer, err.Error(), http.StatusInternalServerError)
+		}
+	})
+
+	http.HandleFunc("/index", index)
+
+	/**
+	digunakan untuk menghidupkan server sekaligus menjalankan aplikasi
+	menggunakan server tersebut. Di Go, 1 web aplikasi adalah 1 buah
+	server berbeda.
+	*/
+	port := ":8080"
+	err := http.ListenAndServe(port, nil)
+	if err != nil {
+		panic("error lah bang")
 	}
 }
 
