@@ -22,14 +22,16 @@
     }
 </style>
 <body>
-<h1 style="text-align: center" class="my-5">Mobil favorite</h1>
+<h1 style="text-align: center" class="my-5">Mobil favorit</h1>
 <table>
     <tr>
-        <th>Car Name</th>
-        <th>Engine Name</th>
+        <th>No.</th>
+        <th>Nama Mobil</th>
+        <th>Nama Mesin</th>
     </tr>
     {{ range . }}
     <tr>
+        <td>{{.Id}}</td>
         <td>{{.Name}}</td>
         <td>{{.Engine}}</td>
     </tr>

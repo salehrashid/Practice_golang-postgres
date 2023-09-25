@@ -11,6 +11,7 @@ import (
 
 type Cars struct {
 	gorm.Model
+	Id     int
 	Name   string
 	Engine string
 }
