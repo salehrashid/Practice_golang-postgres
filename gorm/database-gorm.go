@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-postgres/constants"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -13,7 +14,9 @@ type Product struct {
 }
 
 func main() {
-	dsn := "host=localhost user=postgres password=root dbname=product port=5432 sslmode=disable"
+	dsn := fmt.Sprintf("host=%s port=%d user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		constants.Host, constants.Port, constants.User, constants.Password, constants.Dbname)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed connect to database")
@@ -60,4 +63,13 @@ func main() {
 	DELETE FROM products WHERE id = 8;
 	*/
 	db.Unscoped().Delete(&product, 8) //hard delete
+
+	/**
+	SELECT * FROM products
+	*/
+	var productRecord []Product
+	db.Find(&productRecord)
+	for _, value := range productRecord {
+		fmt.Println(value)
+	}
 }
