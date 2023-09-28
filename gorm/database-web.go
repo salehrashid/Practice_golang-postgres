@@ -63,13 +63,14 @@ func httpHandler() {
 	menggunakan server tersebut. Di Go, 1 web aplikasi adalah 1 buah
 	server berbeda.
 	*/
-	port := ":8080"
+	port := ":7000"
 	err := http.ListenAndServe(port, nil)
 	if err != nil {
-		panic("error lah bang")
+		panic(err)
 	}
 }
 
+/* hard coded data insertion */
 func dbInsertRecords() {
 	dsn := "host=localhost user=postgres password=root dbname=car port=5432 sslmode=disable"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
